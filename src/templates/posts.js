@@ -9,12 +9,19 @@ import SEO from '../components/SEO'
 import { startCase } from 'lodash'
 
 const Posts = ({ data, pageContext }) => {
+  const person = data.allContentfulPerson.edges[0].node
   const posts = data.allContentfulPost.edges
   const { humanPageNumber, basePath } = pageContext
   const isFirstPage = humanPageNumber === 1
+  let featuredPerson
   let featuredPost
   let ogImage
 
+  try {
+    featuredPerson = person[0].node
+  } catch (error) {
+    featuredPerson = null
+  }
   try {
     featuredPost = posts[0].node
   } catch (error) {
@@ -32,7 +39,10 @@ const Posts = ({ data, pageContext }) => {
       <Container>
         {isFirstPage ? (
           <CardList>
-            <Card {...featuredPost} featured basePath={basePath} />
+            {console.log(person)}
+            <div>{person.name}</div>
+            <div>{person.title}</div>
+            <Card {...featuredPerson} {...featuredPost} featured basePath={basePath} />
             {posts.slice(1).map(({ node: post }) => (
               <Card key={post.id} {...post} basePath={basePath} />
             ))}
@@ -52,6 +62,20 @@ const Posts = ({ data, pageContext }) => {
 
 export const query = graphql`
   query($skip: Int!, $limit: Int!) {
+    site {
+      siteMetadata {
+        title
+      }
+    }
+    allContentfulPerson {
+      edges {
+        node {
+          id
+          name
+          title
+        }
+      }
+    }
     allContentfulPost(
       sort: { fields: [publishDate], order: DESC }
       limit: $limit

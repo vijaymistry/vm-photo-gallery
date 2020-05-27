@@ -71,11 +71,17 @@ const Card = ({ slug, heroImage, title, publishDate, body, ...props }) => {
         <Post featured={props.featured}>
           <Link to={`${props.basePath}/${slug}/`}>
             <StyledImg fluid={heroImage.fluid} backgroundColor={'#eeeeee'} />
+            {console.log("Is first image:" + props.featured)}
+            {console.log(props.name)}
+            
+            {props.featured ? ('yes'):('no')}
             <Title>{title}</Title>
             <Date>{publishDate}</Date>
+            {/* 
             <ReadingTime>
               {body.childMarkdownRemark.timeToRead} min read
             </ReadingTime>
+             */}
             <Excerpt
               dangerouslySetInnerHTML={{
                 __html: body.childMarkdownRemark.excerpt,
